@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Marvel Heroes Comparison</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			padding: 0;
+		}
+
+		header {
+			background-color: #ff0000;
+			color: white;
+			padding: 20px;
+			text-align: center;
+		}
+
+		header h1 {
+			margin: 0;
+			font-size: 36px;
+		}
+
+		main {
+			padding: 20px;
+		}
+
+		.hero-list {
+			text-align: center;
+		}
+
+		.hero-card {
+			display: inline-block;
+			margin: 20px;
+			padding: 20px;
+			vertical-align: top;
+			border: 1px solid black;
+			box-shadow: 0px 0px 5px black;
+			width: 300px;
+		}
+
+		.hero-card img {
+			display: block;
+			margin: 0 auto;
+			width: 150px;
+			height: 150px;
+			object-fit: cover;
+			border-radius: 50%;
+		}
+
+		.hero-name {
+			margin-top: 20px;
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.hero-description {
+			margin-top: 10px;
+			text-align: justify;
+			text-justify: inter-word;
+		}
+
+		.hero-appearances {
+			margin-top: 10px;
+			position: relative;
+		}
+
+		.hero-appearances p {
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		.hero-appearances ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		.hero-appearances li {
+			margin: 5px 0;
+		}
+
+		footer {
+			background-color: #333;
+			color: white;
+			padding: 20px;
+			text-align: center;
+		}
+
+		footer p {
+			margin: 0;
+		}
+
+		/* Styles for the button container */
+		.hero-button-container {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+		}
+
+		/* Styles for the button */
+		.hero-button {
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			font-weight: bold;
+			text-transform: uppercase;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		/* Styles for the button when hovered */
+		.hero-button:hover {
+			background-color: #0062cc;
+		}
+
+
+		@keyframes spinner {
+			to {transform: rotate(360deg);}
+		}
+		
+		.spinner:before {
+			content: '';
+			box-sizing: border-box;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 20px;
+			height: 20px;
+			margin-top: -10px;
+			margin-left: -10px;
+			border-radius: 50%;
+			border: 2px solid #ccc;
+			border-top-color: #000;
+			animation: spinner .6s linear infinite;
+		}
+  </style>
+</head>
+<body>
+  <header>
+		<h1>Marvel Heroes Comparison</h1>
+	</header>
+	<main>
+		<div class="hero-button-container">
+			<button class="hero-button">Get New Heroes</button>
+		</div>
+		<div class="hero-list">
+			<div class="hero-card" id="hero1">
+				<div class="hero">
+					<img src="" alt="" />
+					<h2 class="hero-name"></h2>
+					<p class="hero-description"></p>
+					<div class="hero-appearances"></div>
+				</div>
+			</div>
+			<div class="hero-card" id="hero2">
+				<div class="hero">
+					<img src="" alt="" />
+					<h2 class="hero-name"></h2>
+					<p class="hero-description"></p>
+					<div class="hero-appearances"></div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer>
+		<p>&copy; 2023 Marvel Heroes Comparison - T2 Desenvolvimento Web</p>
+	</footer>
+  
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.18.0/js/md5.min.js"></script>
+  <script>
+		// Yeeeeeep, I know this will leak and I dont care, this is just an assignment and this will be deleted soon.
+    const publicKey = '44073d050af5b2f09c4e2ba29c76068c';
+		const privateKey = 'd3a06fe23cae128bb64c1ff747416cad58e8584c';
+    const hero1Name = 'Spider-Man';
+    const hero2Name = 'Iron Man';
+
+		// Add an event listener to the button
+		const btn = document.querySelector('button');
+		btn.addEventListener('click', fetchHeroes);
+
+		function fetchHeroes() {
+			document.querySelector(`#hero1 .hero-appearances`).innerHTML = '<span class="spinner"></span>';
+			document.querySelector(`#hero2 .hero-appearances`).innerHTML = '<span class="spinner"></span>';
+			// Generate a timestamp
+			const timestamp = Date.now();
+
+			// Generate the hash
+			const hash = md5(timestamp + privateKey + publicKey);
+
+			// Create the API request URL with the required parameters
+			const apiUrl = `http://localhost:3000`;
+
+			// Make the API request using the fetch() function
+			fetch(apiUrl)
+				.then(response => response.json())
+				.then(data => {
+					// Choose two heroes at random from the API response
+					const heroes = data.heroes;
+
+					// Render the hero information
+					renderHero(heroes[0], 'hero1');
+					renderHero(heroes[1], 'hero2');
+				})
+				.catch(error => console.error(error));
+		}
+
+		function renderHero(heroData, heroId) {
+			// Get the elements to update
+			const heroEl = document.querySelector(`#${heroId} .hero`);
+			const heroNameEl = document.querySelector(`#${heroId} .hero-name`);
+			const heroDescEl = document.querySelector(`#${heroId} .hero-description`);
+			const heroImgEl = document.querySelector(`#${heroId} img`);
+			const heroAppearancesEl = document.querySelector(`#${heroId} .hero-appearances`);
+
+			// Update the elements with the hero data
+			heroNameEl.textContent = heroData.name;
+			heroDescEl.textContent = heroData.description || 'No description available.';
+			heroImgEl.src = `${heroData.thumbnail.path}.${heroData.thumbnail.extension}`;
+			heroImgEl.alt = heroData.name;
+			heroAppearancesEl.innerHTML = `
+				<p>Comics:</p>
+				<ul>${heroData.comics.items.map(item => `<li>${item.name}</li>`).join('')}</ul>
+				<p>Series:</p>
+				<ul>${heroData.series.items.map(item => `<li>${item.name}</li>`).join('')}</ul>
+				<p>Stories:</p>
+				<ul>${heroData.stories.items.map(item => `<li>${item.name}</li>`).join('')}</ul>
+				<p>Events:</p>
+				<ul>${heroData.events.items.map(item => `<li>${item.name}</li>`).join('')}</ul>
+			`;
+			
+			// Show the hero container once all data has been rendered
+			heroEl.style.display = 'block';
+		}
+  
+		fetchHeroes();
+	</script>
+</body>
+</html>
