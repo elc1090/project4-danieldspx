@@ -1,8 +1,12 @@
 Marvel Heroes Comparison
 
-![Screenshot do projeto](./images/screenshot.png "Screenshot do projeto").
+![Screenshot do projeto](./images/screenshot.png "Screenshot do projeto")
+![Screenshot do projeto](./images/jaeger.png "Screenshot do projeto")
 
-Acesso: https://elc1090.github.io/project2-danieldspx
+Video Apresentação:
+https://youtu.be/RNVRTrr5GvY
+
+Acesso: https://elc1090.github.io/project4-danieldspx
 
 
 #### Desenvolvedor(a)

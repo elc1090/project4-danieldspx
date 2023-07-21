@@ -12,7 +12,7 @@ const privateKey = 'd3a06fe23cae128bb64c1ff747416cad58e8584c';
 
 const provider = new BasicTracerProvider({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'heroes-test',
+    [SemanticResourceAttributes.SERVICE_NAME]: 'heroes-apresentacao',
   }),
 });
 
@@ -33,7 +33,7 @@ provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
  * methods will receive no-op implementations.
  */
 provider.register();
-const tracer = opentelemetry.trace.getTracer('heroes-test-tracer');
+const tracer = opentelemetry.trace.getTracer('heroes-tracer');
 
 const express = require('express');
 const app = express();
@@ -93,6 +93,7 @@ async function fetchHero(parent) {
   span.addEvent('Heroes retrieved', fetchStart);
   // Set attributes to the span.
   span.setAttribute('hash', hash);
+  span.setAttribute('Ola', 'Mundo');
 
   span.end();
 
